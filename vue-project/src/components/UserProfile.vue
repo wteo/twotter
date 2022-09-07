@@ -5,6 +5,12 @@ import TwootItem from './TwootItem.vue';
 export default {
   data() {
     return {
+      newTwootContent: '',
+      selectedTwootType: 'instant',
+      twootTypes: [
+        { value: 'draft', name: 'Draft' },
+        { value: 'instance', name: 'Instance' }
+        ],
       followers: 0,
       user: {
         id: 1,
@@ -41,6 +47,15 @@ export default {
     },
     toggleFavourite(id) {
         console.log(`Favourited Tweet ${id}`);
+    },
+    createNewTwoot() {
+        if (this.newTwootContent && this.selectedTwootType !== 'draft') {
+            this.user.twoots.unshift({ 
+                    id: this.user.twoots.length + 1,
+                    content: this.newTwootContent
+            });
+        }
+        this.newTwootContent = '';
     }
   },
   mounted() {
@@ -62,9 +77,24 @@ export default {
             <div class="user-profile_follower-count">
                 <strong>Followers: </strong> {{ followers }}
             </div>
+            <form class="user_profile_create-twoot" @submit.prevent="createNewTwoot">
+                <label for="newTwoot"><strong>New Twoot</strong></label>
+                <textarea id="newTwoot" rows="4" v-model="newTwootContent"></textarea>
+                <div class="user-profile_create-twoot-type">
+                    <label for="newTwootType"><strong>Type: </strong></label>
+                    <select id="newTwoot" v-model="selectedTwootType">
+                        <option v-bind:value="option.value" v-for="option in twootTypes" v-bind:key="index">
+                            {{ option.name }}
+                        </option>
+                    </select>
+                </div>
+                <button>
+                    Twoot!
+                </button>
+            </form>
         </div>
         <div class="_user-profile_twoots-wrapper">
-            <TwootItem v-for="twoot in user.twoots" v-bind:key="twoot.id" v-bind:username="user.username" v-bind:twoot="twoot" @favourite="toggleFavourite" />    
+            <TwootItem v-for="twoot in user.twoots" v-bind:key="twoot.id" v-bind:username="user.username" v-bind:twoot="twoot" @favouriteTwoot="toggleFavourite" />    
         </div>
     </div>
 </template>
@@ -95,6 +125,12 @@ export default {
     margin-right: auto;
     padding: 0 10px;
     font-weight: bold;
+}
+
+.user_profile_create-twoot {
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
 }
 
 h1 {

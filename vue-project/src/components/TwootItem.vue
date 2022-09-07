@@ -13,8 +13,8 @@ export default {
     },
     methods: {
         favouriteTwoot(id) {
-            // this.$emit(), in-built method to help pass data from child to parent components
-            this.$emit('favourite', id);
+            // this.$emit(), in-built method to help pass data from child to parent 
+            this.$emit('favouriteTwoot', id);
         }
     }
 };
